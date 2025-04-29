@@ -1,0 +1,200 @@
+@import 'tailwindcss';
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .prose {
+    @apply max-w-none;
+  }
+  
+  .prose p {
+    @apply my-6;
+  }
+  
+  .prose pre {
+    @apply rounded-lg border bg-card text-card-foreground p-4 my-6 overflow-x-auto;
+  }
+  
+  .prose code {
+    @apply rounded px-1.5 py-0.5 bg-muted text-foreground font-mono text-sm;
+  }
+  
+  /* Improve code block styling in light mode */
+  :root:not(.dark) .prose pre {
+    @apply bg-slate-50 border-slate-200 shadow-sm text-slate-800;
+  }
+  
+  :root:not(.dark) .prose code {
+    @apply bg-slate-100 text-slate-700;
+  }
+  
+  :root:not(.dark) .prose pre code {
+    @apply bg-transparent text-slate-700;
+  }
+  
+  /* Heading styles with proper hierarchy */
+  .prose h1 {
+    @apply text-3xl font-extrabold tracking-tight mt-10 mb-6 border-b pb-2 border-border/50;
+  }
+  
+  .prose h2 {
+    @apply text-2xl font-bold mt-8 mb-4 text-foreground/90;
+  }
+  
+  .prose h3 {
+    @apply text-xl font-semibold mt-6 mb-3 text-foreground/85;
+  }
+  
+  .prose h4 {
+    @apply text-lg font-medium mt-5 mb-2 text-foreground/80;
+  }
+  
+  .prose h5 {
+    @apply font-medium mt-4 mb-2 text-foreground/75;
+  }
+  
+  .prose h6 {
+    @apply font-medium text-sm mt-4 mb-2 text-foreground/70;
+  }
+  
+  .prose a {
+    @apply text-primary underline-offset-4 hover:text-primary/80 transition-colors;
+  }
+  
+  .prose blockquote {
+    @apply border-l-4 border-primary/20 bg-muted/50 px-4 py-2 rounded-r-md;
+  }
+  
+  .prose ul, .prose ol {
+    @apply my-6 ml-6;
+  }
+  
+  .prose ul {
+    @apply list-disc;
+  }
+  
+  .prose ol {
+    @apply list-decimal;
+  }
+  
+  .prose li {
+    @apply my-2;
+  }
+  
+  .prose img {
+    @apply rounded-lg mx-auto my-6;
+  }
+  
+  .prose hr {
+    @apply my-8 border-border;
+  }
+  
+  .prose table {
+    @apply w-full my-6 border-collapse;
+  }
+  
+  .prose table th,
+  .prose table td {
+    @apply border border-border p-2;
+  }
+  
+  .prose table th {
+    @apply bg-muted/50;
+  }
+}
+
+@layer components {
+  .container {
+    @apply w-full max-w-[90rem] mx-auto;
+  }
+  
+  /* Ensure consistent spacing in Safari and other browsers */
+  @supports (padding: max(0px)) {
+    .container {
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
+  }
+}

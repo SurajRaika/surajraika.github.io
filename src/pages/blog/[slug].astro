@@ -1,0 +1,100 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import { formatDate } from '../../lib/utils';
+
+export async function getStaticPaths() {
+  const blogEntries = (await getCollection('blog'))
+    .filter((entry: any) => entry.data.draft !== true);
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+let renderError = false;
+let Content;
+
+try {
+  const { Content: C } = await entry.render();
+  Content = C;
+} catch (e) {
+  renderError = true;
+}
+
+const formattedDate = entry.data.pubDate instanceof Date 
+  ? formatDate(entry.data.pubDate) 
+  : 'No date';
+---
+
+<MainLayout 
+  title={entry.data.title || 'Untitled Post'} 
+  description={entry.data.description || 'No description available'}
+>
+  <article class="max-w-5xl mx-auto px-4 sm:px-6 bg-card rounded-lg shadow-sm overflow-hidden">
+    {entry.data.heroImage && (
+      <div class="aspect-[21/9] overflow-hidden">
+        <img 
+          src={entry.data.heroImage} 
+          alt={entry.data.title || 'Blog post image'} 
+          class="w-full h-full object-cover"
+          loading="eager"
+          onerror="this.onerror=null; this.src='/placeholder-image.jpg';"
+        />
+      </div>
+    )}
+    <div class="p-6 md:p-8">
+      <div class="mb-6 space-y-2">
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-foreground">{entry.data.title || 'Untitled Post'}</h1>
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-muted-foreground">
+          <div class="inline-flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+              <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+              <line x1="16" x2="16" y1="2" y2="6"></line>
+              <line x1="8" x2="8" y1="2" y2="6"></line>
+              <line x1="3" x2="21" y1="10" y2="10"></line>
+            </svg>
+            {entry.data.pubDate && (
+              <time datetime={entry.data.pubDate instanceof Date ? entry.data.pubDate.toISOString() : ''}>
+                {formattedDate}
+              </time>
+            )}
+          </div>
+          
+          {entry.data.author && (
+            <div class="inline-flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>{entry.data.author}</span>
+            </div>
+          )}
+        </div>
+        
+        {entry.data.tags && Array.isArray(entry.data.tags) && entry.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-2 mt-3">
+            {entry.data.tags.map((tag: string) => (
+              <a href={`/blog/tag/${encodeURIComponent(tag)}`} class="text-xs bg-accent/80 text-accent-foreground hover:bg-accent transition-colors px-2.5 py-1 rounded-full">
+                {tag}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+      
+      <div class="prose prose-neutral dark:prose-invert max-w-none">
+        {renderError ? (
+          <p class="text-red-500">Error rendering post content.</p>
+        ) : Content ? (
+          <Content />
+        ) : (
+          <div class="flex items-center justify-center py-16">
+            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        )}
+      </div>
+    </div>
+  </article>
+</MainLayout>
