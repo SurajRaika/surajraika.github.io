@@ -39,10 +39,8 @@ jobs:
       - name: Install Playwright Browsers
         run: npm install playwright && npx playwright install --with-deps chromium
 
-      - name: Build Astro Production Site
-        # Assuming 'npm run build' is the standard Astro build command
-        # If your package.json script is different, adjust accordingly
-        run: npm run build
+      - name: Build Astro Production
+        run: npm run build -mode production
         # NOTE: Ensure your astro.config.mjs is configured correctly
         # for GitHub Pages base path if needed (e.g., base: '/<repo-name>/')
 

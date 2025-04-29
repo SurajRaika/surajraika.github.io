@@ -6,7 +6,6 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "postinstall": "npm install playwright && npx playwright install --with-deps chromium",
     "astro": "astro"
   },
   "dependencies": {
