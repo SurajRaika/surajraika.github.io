@@ -12,6 +12,7 @@ const basePath = new URL(site).pathname !== '/' ? new URL(site).pathname : undef
 
 // https://astro.build/config
 export default defineConfig({
+  outDir: 'dist',
   site,
   base: basePath,
   vite: {
