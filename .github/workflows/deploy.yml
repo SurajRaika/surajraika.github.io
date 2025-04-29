@@ -32,15 +32,17 @@ jobs:
       - name: Install dependencies 
         run: npm install
 
-      # Steps specifically for Playwright (needed for Mermaid rendering)
-      - name: Install Playwright
-        run: npm install -D @playwright/test@latest
+      # Install Playwright and required browsers for rendering (e.g., Mermaid)
+      - name: Install Playwright and Mermaid support
+        run: |
+          npm install -D @playwright/test@latest 
+          npm install playwright
+          npm install mermaid-isomorphic
+          npx playwright install --with-deps chromium
 
-      - name: Install Playwright Browsers
-        run: npm install playwright && npx playwright install --with-deps chromium
-
-      - name: Build Astro Production
-        run: npm run build -mode production
+      # Build the Astro production site
+      - name: Build Astro Production Site
+        run: npm run build
         # NOTE: Ensure your astro.config.mjs is configured correctly
         # for GitHub Pages base path if needed (e.g., base: '/<repo-name>/')
 
