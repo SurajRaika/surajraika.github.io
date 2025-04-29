@@ -1,0 +1,111 @@
+{
+  "$ref": "#/definitions/blog",
+  "definitions": {
+    "blog": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "pubDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "integer",
+              "format": "unix-time"
+            }
+          ]
+        },
+        "updatedDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "integer",
+              "format": "unix-time"
+            }
+          ]
+        },
+        "slug": {
+          "type": "string"
+        },
+        "featured": {
+          "type": "boolean"
+        },
+        "draft": {
+          "type": "boolean",
+          "default": false
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "author": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "link": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "name",
+            "link"
+          ],
+          "additionalProperties": false
+        },
+        "reviewedBy": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "link": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "name",
+            "link"
+          ],
+          "additionalProperties": false
+        },
+        "heroImage": {
+          "type": "string"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "pubDate"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
