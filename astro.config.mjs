@@ -30,6 +30,9 @@ export default defineConfig({
       type: 'shiki',
       excludeLangs: ['mermaid', 'math', 'pq', '', 'python'],
     },
-    rehypePlugins: [rehypeMermaid],
+    rehypePlugins: [
+      addMermaidClass,
+      rehypeMermaid,
+    ],
   },
 });
