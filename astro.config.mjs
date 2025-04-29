@@ -1,9 +1,20 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
+
+
 import react from '@astrojs/react';
+
+
+
 import sitemap from '@astrojs/sitemap';
-import rehypeMermaid from 'rehype-mermaid';
+
+
+
+import mdx from '@astrojs/mdx';
+import expressiveCode from "astro-expressive-code";
+import remarkMermaid from 'remark-mermaidjs'
+
 
 // Get site URL from environment or use default
 const site = process.env.SITE_URL || 'https://valerock.com';
@@ -25,12 +36,19 @@ export default defineConfig({
       priority: 0.9,
       lastmod: new Date(),
     }),
+    expressiveCode(), mdx()
   ], 
+  // markdown: {
+  //   syntaxHighlight: {
+  //     type: 'shiki',
+  //     excludeLangs: ['mermaid', 'math', 'pq', '', 'python'],
+  //   },
+  //   rehypePlugins: [rehypeMermaid],
+  // },
   markdown: {
-    syntaxHighlight: {
-      type: 'shiki',
-      excludeLangs: ['mermaid', 'math', 'pq', '', 'python'],
-    },
-    rehypePlugins: [rehypeMermaid],
+    // Applied to .md and .mdx files
+    remarkPlugins: [remarkMermaid],
   },
+
+
 });
