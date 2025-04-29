@@ -21,21 +21,22 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Using v4, recommended latest
+        uses: actions/checkout@v4 # Using latest v4
 
-      - name: Setup Node.js 18.x
-        uses: actions/setup-node@v4 # Using v4, recommended latest
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4 # Using latest v4
         with:
-          node-version: 18.17.x
+          node-version: 20.x # Recommended LTS version
           cache: 'npm'
 
-      - name: Install dependencies 
+      - name: Install dependencies
         run: npm install
 
       # Install Playwright and required browsers for rendering (e.g., Mermaid)
+      # These steps are specific to your build needs (like Mermaid rendering with Playwright)
       - name: Install Playwright and Mermaid support
         run: |
-          npm install -D @playwright/test@latest 
+          npm install -D @playwright/test@latest
           npm install playwright
           npm install mermaid-isomorphic
           npx playwright install --with-deps chromium
@@ -47,7 +48,7 @@ jobs:
         # for GitHub Pages base path if needed (e.g., base: '/<repo-name>/')
 
       - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v3 # Using latest v3
         with:
           # Directory containing the static files built by Astro.
           # Default Astro output is './dist'. Adjust if yours is different.
@@ -64,5 +65,5 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 # Using v4, recommended latest
+        uses: actions/deploy-pages@v4 # Using latest v4
         # This action automatically downloads the artifact uploaded by upload-pages-artifact@v3
