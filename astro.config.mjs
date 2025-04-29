@@ -13,7 +13,8 @@ import sitemap from '@astrojs/sitemap';
 
 import mdx from '@astrojs/mdx';
 import expressiveCode from "astro-expressive-code";
-import remarkMermaid from 'remark-mermaidjs'
+// import remarkMermaid from 'remark-mermaidjs'
+import rehypeMermaid from 'rehype-mermaid';
 
 
 // Get site URL from environment or use default
@@ -38,17 +39,18 @@ export default defineConfig({
     }),
     expressiveCode(), mdx()
   ], 
-  // markdown: {
-  //   syntaxHighlight: {
-  //     type: 'shiki',
-  //     excludeLangs: ['mermaid', 'math', 'pq', '', 'python'],
-  //   },
-  //   rehypePlugins: [rehypeMermaid],
-  // },
   markdown: {
-    // Applied to .md and .mdx files
-    remarkPlugins: [remarkMermaid],
-  },
+    syntaxHighlight: {
+      type: 'shiki',
+      excludeLangs: ['mermaid', 'math', 'pq', '', 'python'],
+    },
+    rehypePlugins: [
+      [rehypeMermaid, { strategy: 'pre-mermaid' }]
+    ],  },
+  // markdown: {
+  //   // Applied to .md and .mdx files
+  //   remarkPlugins: [remarkMermaid],
+  // },
 
 
 });
