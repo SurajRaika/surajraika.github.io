@@ -37,7 +37,7 @@ jobs:
         run: npm install -D @playwright/test@latest
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: npm install playwright && npx playwright install --with-deps chromium
 
       - name: Build Astro Production Site
         # Assuming 'npm run build' is the standard Astro build command
