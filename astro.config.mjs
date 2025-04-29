@@ -44,9 +44,7 @@ export default defineConfig({
       type: 'shiki',
       excludeLangs: ['mermaid', 'math', 'pq', '', 'python'],
     },
-    rehypePlugins: [
-      [rehypeMermaid, { strategy: 'pre-mermaid' }]
-    ],  },
+    rehypePlugins: [rehypeMermaid],  },
   // markdown: {
   //   // Applied to .md and .mdx files
   //   remarkPlugins: [remarkMermaid],
