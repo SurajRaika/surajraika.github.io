@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "postinstall": "npx playwright install --with-deps",
+    
     "astro": "astro"
   },
   "dependencies": {
