@@ -1,107 +1,83 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import Container from "@components/Container.astro";
-import { SITE, HOME, SOCIALS } from "@consts";
-import ArrowCard from "@components/ArrowCard.astro";
-import Link from "@components/Link.astro";
-import { getCollection } from "astro:content";
-import type { CollectionEntry } from "astro:content";
+import MainLayout from '../layouts/MainLayout.astro';
+import BlogCard from '../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
 
-const blog = (await getCollection("blog"))
-  .filter((post) => !post.data.draft)
- .sort((a: any, b: any) => b.data.pubDate.getTime() - a.data.pubDate.getTime())  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
-
-
-
-const projects: CollectionEntry<"projects">[] = (
-  await getCollection("projects")
-)
-  .filter((project) => !project.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE);
+// Get 3 most recent blog posts
+const recentPosts = (await getCollection('blog'))
+  .sort((a: any, b: any) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .filter((post: any) => post.data.draft !== true)
+  .slice(0, 3);
 ---
 
-<Layout title={HOME.TITLE} description={HOME.DESCRIPTION}>
-  <Container>
-    <aside data-pagefind-ignore>
-      <h1 class="font-semibold text-black dark:text-white">
-        Hey, I’m Oscar Valerock 🤘 
+<MainLayout title="Oscar - Developer & Blogger">
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden py-16 md:py-24">
+    <div class="absolute inset-0 bg-gradient-to-br from-background to-background/10 -z-10"></div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center gap-6 text-center">
+      <h1 class="animate-fade-down animate-once animate-duration-500 text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
+        Hi, I'm <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">Oscar</span>
       </h1>
-      <div class="space-y-16">
-     <section> <article class="space-y-4"> <span> <p>I make the best guacamole in Switzerland and work mostly with Power BI and Power Query. I enjoy exploring other tech too, from web dev to automation. </p> <p> This site is where I share projects, experiments, and thoughts on tech. It’s simple, accessible, and built with Astro + Tailwind, with support for dark mode and MDX. </p> </span> <span class="animate"> <p> Check out my <Link href="https://bibb.pro">blog</Link> for updates or connect with me on <Link href="https://www.linkedin.com/in/oscarmartinezv">LinkedIn</Link>. </p> </span> </article> </section>
-
-        <section class="animate space-y-6">
-          <div class="flex flex-wrap items-center justify-between gap-y-2">
-            <h2 class="font-semibold text-black dark:text-white">
-              Latest posts
-            </h2>
-            <Link href="/blog"> See all posts </Link>
-          </div>
-          <ul class="not-prose flex flex-col gap-4">
-            {
-              blog.map((post) => (
-                <li>
-                  <ArrowCard entry={post} />
-                </li>
-              ))
-            }
-          </ul>
-        </section>
-<!-- 
-        <section class="animate space-y-6">
-          <div class="flex flex-wrap items-center justify-between gap-y-2">
-            <h2 class="font-semibold text-black dark:text-white">
-              Recent projects
-            </h2>
-            <Link href="/projects"> See all projects </Link>
-          </div>
-          <ul class="not-prose flex flex-col gap-4">
-            {
-              projects.map((project) => (
-                <li>
-                  <ArrowCard entry={project} />
-                </li>
-              ))
-            }
-          </ul>
-        </section> -->
-
-        <section class="animate space-y-4">
-          <h2 class="font-semibold text-black dark:text-white">
-            Let's Connect
-          </h2>
-          <article>
-            <p>
-              If you want to get in touch with me about something or just to say
-              hi, reach out on social media or send me an email.
-            </p>
-          </article>
-          <ul class="not-prose flex flex-wrap gap-2">
-            {
-              SOCIALS.map((SOCIAL) => (
-                <li class="flex gap-x-2 text-nowrap">
-                  <Link
-                    href={SOCIAL.HREF}
-                    external
-                    aria-label={`${SITE.TITLE} on ${SOCIAL.NAME}`}
-                  >
-                    {SOCIAL.NAME}
-                  </Link>
-                  {"/"}
-                </li>
-              ))
-            }
-            <li class="line-clamp-1">
-              <Link
-                href={`mailto:${SITE.EMAIL}`}
-                aria-label={`Email ${SITE.TITLE}`}
-              >
-                {SITE.EMAIL}
-              </Link>
-            </li>
-          </ul>
-        </section>
+      <p class="animate-fade-up animate-once animate-duration-500 max-w-[700px] text-xl text-muted-foreground">
+        Software developer, tech enthusiast, and blogger. I share my journey and insights about web development and technology.
+      </p>
+      <div class="animate-fade-up animate-delay-300 animate-once flex flex-wrap items-center justify-center gap-4 pt-4">
+        <a 
+          href="/blog" 
+          class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
+        >
+          Read My Blog
+        </a>
+        <a 
+          href="#about" 
+          class="inline-flex h-11 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          Learn More
+        </a>
       </div>
-    </aside>
-  </Container>
-</Layout>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-16 bg-muted/30 rounded-lg">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="text-3xl font-bold tracking-tight mb-6">About Me</h2>
+        <p class="text-muted-foreground leading-relaxed mb-4">
+          I'm a passionate developer with expertise in web technologies, cloud solutions, and automation. With years of experience in the tech industry, I've worked on various projects across different domains.
+        </p>
+        <p class="text-muted-foreground leading-relaxed">
+          Through this blog, I share my knowledge, experiences, and insights about the ever-evolving world of technology.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Posts Section -->
+  <section class="py-16">
+    <div class="container mx-auto sm:px-0">
+      <div class="flex justify-between items-center mb-10">
+        <h2 class="text-3xl font-bold tracking-tight">Recent Posts</h2>
+        <a href="/blog" class="text-primary hover:text-primary/80 hover:underline transition-colors flex items-center gap-1">
+          View All
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </a>
+      </div>
+      
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {recentPosts.map((post: any) => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            slug={post.slug}
+            heroImage={post.data.heroImage}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>
