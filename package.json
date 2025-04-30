@@ -25,6 +25,7 @@
     "playwright": "^1.52.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "mermaid-isomorphic": "^3.0.4",
     "rehype-mermaid": "^3.0.0",
     "remark-mermaidjs": "^7.0.0",
     "tailwind-merge": "^3.2.0",
