@@ -38,7 +38,7 @@ flowchart LR
 ```
 
 
-![Beaten by the best](https://github.com/OscarValerock/OscarValerock/blob/main/src/content/blog/beaten-by-the-best-and-come-back-for-more/Beaten%20by%20the%20best.jpg?raw=true)
+![Beaten by the best](public/beaten-by-the-best-and-come-back-for-more-01.jpg)
 
 It was extremely tough, and everyone else was faster, stronger, better; he felt and bit dust countless times, and did not achieve a single objective, the team leader thought he might be misplaced, that he didn´t belong there; he will come back for more.
 

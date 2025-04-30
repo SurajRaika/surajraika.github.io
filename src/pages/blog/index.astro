@@ -1,137 +1,55 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
-import BlogCard from '../../components/BlogCard.astro';
-import SearchBar from '../../components/SearchBar';
-import { getCollection } from 'astro:content';
+import { type CollectionEntry, getCollection } from "astro:content";
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/Container.astro";
+import ArrowCard from "@components/ArrowCard.astro";
+import { BLOG } from "@consts";
 
-// Get all blog posts
-let allPosts = (await getCollection('blog'))
-  .filter((post: any) => post.data.draft !== true);
+const data = (await getCollection("blog"))
+  .filter((post) => !post.data.draft)
+   .sort((a: any, b: any) => b.data.pubDate.getTime() - a.data.pubDate.getTime()) ;
 
-// Sort posts by pubDate in descending order
-allPosts = allPosts.sort((a: any, b: any) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf());
+type Acc = {
+  [year: string]: CollectionEntry<"blog">[];
+};
 
-// Get unique tags
-const allTags = [...new Set(allPosts.flatMap((post: any) => post.data.tags || []))];
+const posts = data.reduce((acc: Acc, post) => {
+  const year = post.data.pubDate.getFullYear().toString();
+  if (!acc[year]) {
+    acc[year] = [];
+  }
+  acc[year].push(post);
+  return acc;
+}, {});
+
+const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
 ---
 
-<MainLayout title="Blog">
-  <div class="container mx-auto px-0">
-    <div class="space-y-8 mb-12">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Blog</h1>
-        <SearchBar client:load id="blog-search" className="w-full md:w-64" />
+<Layout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
+  <Container>
+    <aside data-pagefind-ignore>
+      <div class="space-y-10">
+        <div class="space-y-4">
+          {
+            years.map((year) => (
+              <section class="animate space-y-4">
+                <div class="font-semibold text-black dark:text-white">
+                  {year}
+                </div>
+                <div>
+                  <ul class="not-prose flex flex-col gap-4">
+                    {posts[year].map((post) => (
+                      <li>
+                        <ArrowCard entry={post} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </section>
+            ))
+          }
+        </div>
       </div>
-      
-      {allTags.length > 0 && (
-        <div>
-          <h2 class="text-sm font-medium mb-3">Filter by tag</h2>
-          <div class="flex flex-wrap gap-2">
-            {allTags.map(tag => (
-              <button
-                class="tag-filter text-sm bg-accent text-accent-foreground hover:bg-accent/80 transition-colors px-3 py-1 rounded-full"
-                data-tag={tag}
-              >
-                {tag}
-              </button>
-            ))}
-            <button
-              class="tag-filter-reset text-sm text-primary hover:text-primary/80 hover:underline transition-colors px-2"
-            >
-              Reset filters
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-    
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {allPosts.map((post: any) => (
-        <div 
-          class="blog-post-card h-full" 
-          data-title={post.data.title}
-          data-description={post.data.description}
-          data-tags={(post.data.tags || []).join(',')}
-        >
-          <BlogCard
-            title={post.data.title}
-            description={post.data.description}
-            pubDate={post.data.pubDate}
-            slug={post.slug}
-            heroImage={post.data.heroImage}
-            tags={post.data.tags}
-          />
-        </div>
-      ))}
-    </div>
-    
-    {allPosts.length === 0 && (
-      <div class="text-center py-16">
-        <div class="inline-flex items-center justify-center rounded-full bg-muted p-8 mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-muted-foreground">
-            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
-          </svg>
-        </div>
-        <h3 class="text-2xl font-medium mb-2">No posts found</h3>
-        <p class="text-muted-foreground">Check back soon for new content!</p>
-      </div>
-    )}
-  </div>
-
-  <script>
-    // Handle tag filtering and search
-    document.addEventListener('DOMContentLoaded', () => {
-      const tagButtons = document.querySelectorAll('.tag-filter');
-      const resetButton = document.querySelector('.tag-filter-reset');
-      const posts = document.querySelectorAll('.blog-post-card');
-      const searchInput = document.getElementById('blog-search');
-      
-      // Handle tag filtering
-      tagButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const tag = button.getAttribute('data-tag')?.toLowerCase();
-          
-          tagButtons.forEach(btn => btn.classList.remove('bg-primary', 'text-primary-foreground'));
-          button.classList.add('bg-primary', 'text-primary-foreground');
-          
-          posts.forEach(post => {
-            const tags = post.getAttribute('data-tags')?.toLowerCase() || '';
-            
-            if (tags.includes(tag as string)) {
-              post.classList.remove('hidden');
-            } else {
-              post.classList.add('hidden');
-            }
-          });
-        });
-      });
-      
-      resetButton?.addEventListener('click', () => {
-        tagButtons.forEach(btn => {
-          btn.classList.remove('bg-primary', 'text-primary-foreground');
-          btn.classList.add('bg-accent', 'text-accent-foreground');
-        });
-        posts.forEach(post => post.classList.remove('hidden'));
-      });
-      
-      // Handle search
-      if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-          const query = (e.target as HTMLInputElement).value.toLowerCase();
-          
-          posts.forEach(post => {
-            const title = post.getAttribute('data-title')?.toLowerCase() || '';
-            const description = post.getAttribute('data-description')?.toLowerCase() || '';
-            const tags = post.getAttribute('data-tags')?.toLowerCase() || '';
-            
-            if (title.includes(query) || description.includes(query) || tags.includes(query)) {
-              post.classList.remove('hidden');
-            } else {
-              post.classList.add('hidden');
-            }
-          });
-        });
-      }
-    });
-  </script>
-</MainLayout>
+    </aside>
+  </Container>
+</Layout>
